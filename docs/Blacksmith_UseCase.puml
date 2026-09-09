@@ -1,0 +1,89 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam roundcorner 20
+skinparam actorStyle awesome
+
+skinparam usecase {
+  BackgroundColor LightCyan
+  BorderColor DarkCyan
+  ArrowColor Teal
+  FontName Arial
+}
+
+skinparam actor {
+  BackgroundColor SteelBlue
+  BorderColor DarkBlue
+  FontName Arial
+}
+
+actor "Customer" as Customer
+actor "Workshop Owner" as Owner
+actor "Administrator" as Admin
+
+rectangle "Blacksmith Platform" {
+
+  ' Customer Use Cases
+  usecase "Browse Categories" as UC_C1
+  usecase "Search Works" as UC_C2
+  usecase "Filter Works" as UC_C3
+  usecase "View Work Details" as UC_C4
+  usecase "View Workshop Profile" as UC_C5
+  usecase "Contact Workshop Owner" as UC_C6
+  usecase "Report Work" as UC_C7
+
+  ' Workshop Owner Use Cases
+  usecase "Register" as UC_O1
+  usecase "Login" as UC_O2
+  usecase "Manage Profile" as UC_O3
+  usecase "Add Work / Design" as UC_O4
+  usecase "Edit Work" as UC_O5
+  usecase "Delete Work" as UC_O6
+  usecase "Upload Images" as UC_O7
+  usecase "Manage Published Works" as UC_O8
+
+  ' Administrator Use Cases
+  usecase "Manage Users" as UC_A1
+  usecase "Manage Workshop Owners" as UC_A2
+  usecase "Manage Categories" as UC_A3
+  usecase "Manage Works" as UC_A4
+  usecase "Manage Reports" as UC_A5
+  usecase "Moderate Content" as UC_A6
+}
+
+' Connections - Customer
+Customer --> UC_C1
+Customer --> UC_C2
+Customer --> UC_C3
+Customer --> UC_C4
+Customer --> UC_C5
+Customer --> UC_C6
+Customer --> UC_C7
+
+' Connections - Owner
+Owner --> UC_O1
+Owner --> UC_O2
+Owner --> UC_O3
+Owner --> UC_O4
+Owner --> UC_O5
+Owner --> UC_O6
+Owner --> UC_O7
+Owner --> UC_O8
+UC_O4 ..> UC_O7 : <<include>>
+
+' Connections - Administrator
+Admin --> UC_O2
+Admin --> UC_A1
+Admin --> UC_A2
+Admin --> UC_A3
+Admin --> UC_A4
+Admin --> UC_A5
+Admin --> UC_A6
+
+note right of UC_C1
+  Categories include: Doors, Gates, Windows, 
+  Railings, Fences, Stairs, Canopies, 
+  Iron Furniture, Iron Decoration, etc.
+end note
+
+@enduml
