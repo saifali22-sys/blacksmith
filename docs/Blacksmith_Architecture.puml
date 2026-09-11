@@ -1,0 +1,123 @@
+@startuml
+!theme plain
+skinparam topurl https://plantuml.com/
+skinparam defaultFontName Arial
+skinparam roundCorner 10
+skinparam padding 4
+skinparam shadowing false
+skinparam nodesep 30
+skinparam ranksep 40
+
+' Colors
+skinparam actor {
+    BackgroundColor SteelBlue
+    BorderColor DarkBlue
+    FontColor Black
+}
+
+skinparam package {
+    BackgroundColor #F9F9F9
+    BorderColor #CCCCCC
+    FontColor #333333
+    FontSize 14
+    FontStyle bold
+}
+
+skinparam component {
+    BackgroundColor #E3F2FD
+    BorderColor #2196F3
+    FontColor Black
+}
+
+skinparam database {
+    BackgroundColor #E0F7FA
+    BorderColor #00BCD4
+    FontColor Black
+}
+
+skinparam storage {
+    BackgroundColor #FFF9C4
+    BorderColor #FBC02D
+    FontColor Black
+}
+
+title \n**Blacksmith Web Platform**\nSystem Architecture Diagram\n
+
+' 1. Users / Actors Layer
+package "1. Users / Actors Layer" as Layer1 {
+    actor "Customer" as Customer
+    actor "Workshop Owner" as Owner
+    actor "Administrator" as Admin
+}
+
+' 2. Frontend / Presentation Layer
+package "2. Frontend / Presentation Layer" as UI {
+    component "Public Homepage" as F_Home
+    component "Categories" as F_Cat
+    component "Search and Filtering" as F_Search
+    component "Work Details" as F_Work
+    component "Workshop Profiles" as F_Prof
+    component "Authentication Pages" as F_Auth
+    component "Workshop Owner Dashboard" as F_OwnerDash
+    component "Admin Dashboard" as F_AdminDash
+}
+
+' 3. Backend / Application Layer
+package "3. Backend / Application Layer" as API {
+    component "Authentication & Authorization" as B_Auth
+    component "User Management" as B_User
+    component "Workshop Management" as B_Shop
+    component "Category Management" as B_Cat
+    component "Work / Design Management" as B_Work
+    component "Image Management" as B_Img
+    component "Search & Filtering" as B_Search
+    component "Reporting & Moderation" as B_Report
+    component "Contact Management" as B_Contact
+}
+
+' 4 & 5 Databases and Storage layer wrapper for alignment
+package "Data and Storage Layer" {
+    ' 4. Database Layer
+    database "4. Database Layer" as DB_Layer {
+        component "Users" as DB_User
+        component "Workshop Profiles" as DB_Prof
+        component "Categories" as DB_Cat
+        component "Works / Designs" as DB_Work
+        component "Work Images" as DB_Img
+        component "Reports" as DB_Rep
+    }
+
+    ' 5. File / Image Storage
+    storage "5. File / Image Storage" as Storage_Layer {
+        folder "Uploaded Images" {
+            file "Published Works"
+            file "Profiles"
+        }
+    }
+}
+
+' --- Data Flow and Connections ---
+
+' Actors to Frontend
+Customer -down-> UI : " Browses Platform"
+Owner -down-> UI : " Login & Manage Works"
+Admin -down-> UI : " Login & Moderate"
+
+' Highlight Image Flow explicitly (as instructed)
+Owner .down.> UI : " Uploads Images"
+UI .down.> API : " Secures & Forwards Image"
+API .down.> Storage_Layer : " Stores physical file"
+
+' General Communication
+UI -down-> API : " HTTPS Requests"
+API -up-> UI : " HTTPS Responses"
+
+' Backend to Database
+API -down-> DB_Layer : " SQL Queries (CRUD)"
+DB_Layer -up-> API : " Result Sets"
+
+' Backend to Storage
+API -down-> Storage_Layer : " Reads Image Files"
+Storage_Layer -up-> API : " Image Files Data"
+
+@enduml
